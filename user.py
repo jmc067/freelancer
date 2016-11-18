@@ -13,15 +13,13 @@ def create_user(user_params):
 	validate_role(user)
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
+	salt_password(user)
 	clean(user)
 	validate_all_required_fields(user)
-	return str(insert_user(user)) # TODO add error handling
+	return insert_user(user) # TODO add error handling
 
 def get_users():
-	users = get_user({}) # TODO add error handling
-	for user in users:
-		pretty_print(user)
-	return True
+	return get_user({}) # TODO add error handling
 
 # User Validation
 def validate_signup_fields(user_params):
@@ -40,11 +38,14 @@ def validate_role(user_params):
 		error_bad_request("Unsupported Role")	
 
 # Formatting
+def salt_password(user):
+	if field=="salted_password":
+		user["salted_password"] = scrambler.hash(user["password"])	
+		user.pop("password")
+
 def clean(user): 
 	for field in SUPPORTED_USER_FIELDS:
-		if field=="salted_password":
-			user["salted_password"] = scrambler.hash(user["password"])	
-			user.pop("password")
+		print field, str(user[field])
 		if field=="_id" or field=="inbox_id" or field=="ledger_id":
 			user[field] = str(user[field])
 	return user

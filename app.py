@@ -23,13 +23,14 @@ def welcome():
 ### User Routes
 ####################################
 # CREATE user
-@app.route('/user', methods = ['POST'])
-def new_user():
-	return to_json(create_user(request.values))
+@app.route('/signup', methods = ['POST'])
+def signup():
+	user_id = create_user(request.values)
+	return to_json(str(user_id))
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
-def xxx(user_id):
+def user(user_id):
 
 	# READ
 	if request.method == 'GET':
@@ -46,7 +47,12 @@ def xxx(user_id):
 # GET users
 @app.route('/users', methods = ['GET'])
 def list_users():
-	return to_json(get_users())
+	users = get_users()
+	clean_users = map(clean,users)
+	print "woeifjowiejiwejfowiejfoij"
+	print users
+	print "woeifjowiejiwejfowiejfoij"
+	return "True"
 
 
 

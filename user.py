@@ -15,7 +15,7 @@ def create_user(user_params):
 	setup_ledger(user)  # TODO add error handling
 	clean(user)
 	validate_all_required_fields(user)
-	return insert_user(user) # TODO add error handling
+	return str(insert_user(user)) # TODO add error handling
 
 def get_users():
 	users = get_user({}) # TODO add error handling

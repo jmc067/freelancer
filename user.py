@@ -4,6 +4,7 @@ from errors import *
 from inbox import *
 from ledger import *
 from dict_helpers import *
+from bsonify import *
 import scrambler
 
 # Public Functions
@@ -53,5 +54,8 @@ def insert_user(user):
 def get_users(query):
 	return list(get(query,"users"))
 
-def update(query,update,options,collection):
+def update_user(query,update,options,collection):
 	return update(query,update,options,collection)
+
+def delete_user(user_id):
+	return delete({"_id":to_bson(user_id)},"users") 

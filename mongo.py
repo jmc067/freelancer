@@ -10,7 +10,6 @@ def connect_mongo():
 		# Get Mongo Client
 		ON_COMPOSE = os.environ.get('COMPOSE')
 		if ON_COMPOSE:
-			print "getting compose client"
 			mongo_client = MongoClient(os.environ['DB_PORT_27017_TCP_ADDR'],27017)
 		else:
 			mongo_client = MongoClient('mongodb://localhost:27017/')	
@@ -29,3 +28,6 @@ def get(query,collection):
 
 def update(query,update,options,collection):
 	return _mongodb[collection].update(query,update,options)
+
+def delete(query,collection):
+	return _mongodb[collection].remove(query)

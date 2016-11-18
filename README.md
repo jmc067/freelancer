@@ -15,7 +15,8 @@ Backend Application to offer account management, authentication, location tracki
 
 ## Routes
 ### Account Management Routes
-- `POST /user`    <- Creates or Updates user by id
+- `POST /signup`  <- Creates user
+- `POST /user`    <- Updates user by id
 - `GET /user`     <- Gets the user by id
 - `DELETE /user`  <- Deletes user by id
 - `GET /users`    <- Gets list of users by query

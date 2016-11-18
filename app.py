@@ -2,10 +2,11 @@ from flask import Flask
 from flask import request
 import os
 from mongo import connect_mongo
-import bson.objectid
 from user import *
 from errors import *
 from jsonify import *
+from bsonify import *
+
 app = Flask(__name__)
 
 ####################################
@@ -35,11 +36,9 @@ def user(user_id):
 
 	# READ
 	if request.method == 'GET':
-		if bson.objectid.ObjectId.is_valid(user_id):
-			user = [ clean(user) for user in get_users({"_id":bson.ObjectId(user_id)}) ][0]
-			return to_json(user)
-		else:
-			error_bad_request("Invalid User Id")
+		validate_bson(user_id)
+		user = [ clean(user) for user in get_users({"_id":to_bson(user_id)}) ]
+		return to_json(user)
 
 	# UPDATE
 	if request.method == 'POST':
@@ -47,7 +46,8 @@ def user(user_id):
 
 	# DELETE
 	if request.method == 'DELETE':
-		return "DELETE user by id"
+		validate_bson(user_id)
+		return str(delete_user(user_id))
 
 # GET users
 @app.route('/users', methods = ['GET'])

@@ -18,9 +18,6 @@ def create_user(user_params):
 	validate_all_required_fields(user)
 	return insert_user(user) # TODO add error handling
 
-def get_users():
-	return get_user({}) # TODO add error handling
-
 # User Validation
 def validate_signup_fields(user_params):
 	for user_param in USER_SIGNUP_FIELDS:
@@ -45,7 +42,6 @@ def salt_password(user):
 
 def clean(user): 
 	for field in SUPPORTED_USER_FIELDS:
-		print field, str(user[field])
 		if field=="_id" or field=="inbox_id" or field=="ledger_id":
 			user[field] = str(user[field])
 	return user
@@ -54,7 +50,7 @@ def clean(user):
 def insert_user(user):
 	return insert(user,"users")	
 
-def get_user(query):
+def get_users(query):
 	return list(get(query,"users"))
 
 def update(query,update,options,collection):

@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import os
 from mongo import connect_mongo
+import bson.objectid
 from user import *
 from errors import *
 from jsonify import *
@@ -34,7 +35,11 @@ def user(user_id):
 
 	# READ
 	if request.method == 'GET':
-		return "READ user by id"
+		if bson.objectid.ObjectId.is_valid(user_id):
+			user = [ clean(user) for user in get_users({"_id":bson.ObjectId(user_id)}) ][0]
+			return to_json(user)
+		else:
+			error_bad_request("Invalid User Id")
 
 	# UPDATE
 	if request.method == 'POST':
@@ -47,12 +52,8 @@ def user(user_id):
 # GET users
 @app.route('/users', methods = ['GET'])
 def list_users():
-	users = get_users()
-	clean_users = map(clean,users)
-	print "woeifjowiejiwejfowiejfoij"
-	print users
-	print "woeifjowiejiwejfowiejfoij"
-	return "True"
+	users = [ clean(user) for user in get_users({}) ]
+	return to_json(users)
 
 
 

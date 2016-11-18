@@ -1,6 +1,15 @@
 # Freelancer Backend API
 Backend Application to offer account management, authentication, location tracking, location based search, peer to peer messaging, inbox notifications, job offer/acceptance workflow, and payment solution.
 
+## Getting Started (http://containertutorials.com/docker-compose/flask-simple-app.html)
+1.  Build docker image (or use pre-built image)
+	- `docker build -t flask-sample-one:latest .`
+2.  Run docker container using image
+	- `docker run -d -p 5000:5000 flask-sample-one
+3.  Make sure its running
+	- `docker ps -a`
+
+
 ## Routes
 ### Account Management Routes
 - `POST /user`    <- Creates or Updates user by id
@@ -9,7 +18,9 @@ Backend Application to offer account management, authentication, location tracki
 - `GET /users`    <- Gets list of users by query
 
 ### Authentication Routes
-- `POST /authorize`    <- Returns access token upon valid authorize (email/password).  Optional TTL
+- `POST /authorize`    <- Returns access token upon valid authorize (email/password).  Logs active session in Redis Geospacial
+- `POST /authorize`    <- Returns access token upon valid authorize (email/password).  Removes active session in Redis Geospacial
+
 
 ### Location Routes
 - `POST /location`  <- Stores user by id and location and ttl into Redis geodata 
@@ -20,8 +31,8 @@ Backend Application to offer account management, authentication, location tracki
 - `POST /send`  <- Sends and stores message into inbox for user id
 
 ### Job Routes
-- `GET /jobs`   <- Gets jobs for user id
-- `POST /job`   <- Sends job to user id.  
+- `POST /job`   <- Creates or Updates job by id
+- `GET /jobs`   <- Gets jobs for query
 - `POST /job/:id/status` <- Updates job status by job id
 
 ### Payment - TBD
@@ -42,7 +53,7 @@ Backend Application to offer account management, authentication, location tracki
 	"last_name":String,
 	"inbox_id":<BSON::ObjectID>,
 	"jobs_id":<BSON::ObjectID>,
-	"roles":Array(CLIENT,WORKER)
+	"roles":Array(CLIENT,WORKER,ADMIN)
 	"email":String,
 	"salted_password":<BCRYPT>,
 	"token":<OAUTH_TOKEN>
@@ -76,7 +87,7 @@ Backend Application to offer account management, authentication, location tracki
 ### Status
 ```
 {
-	"status":String(REQUESTED,ACCEPTED,DECLINED),
+	"status":String(REQUESTED,ACCEPTED,DECLINED,STARTED,COMPLETED,PENDING_PAYMENT,PAID),
 	"description":String,
 	"status_log":Array(<Status>)
 }
@@ -88,7 +99,7 @@ Backend Application to offer account management, authentication, location tracki
 ### Location
 `token : <GEOSPATIAL LAT/LONG COORDINATES>`
 
-# Feature Adds
+# Feature Adds (Not included in current scope)
 - Administrative Privledges
 	- Create Admin, Update Users, Delete Users
 	- Create, Read, Update, and Delete Categories
@@ -105,7 +116,7 @@ Backend Application to offer account management, authentication, location tracki
 	- Job alerting
 	- Location tracking
 - Payment Upgrades
-	- Funds Escrow 
+	- Funds Escrow
 - Account Upgrades
 	- Account Reviews
 
@@ -115,6 +126,7 @@ Backend Application to offer account management, authentication, location tracki
 2.  User access token should have a 1-to-1 relationship with the user.  aka lookup from access token to user.  Each user should have their own access token on their account.
 3.  POST Job Routes should send automated message to user's inbox to notify the change
 	- REQUESTED,ACCEPTED,DECLINED each have separate messaging workflows
+4.  Make sure user has picture before allowing ACCEPT.  Warn client about picture when REQUESTED
 
 
 # Questions
@@ -125,6 +137,7 @@ Backend Application to offer account management, authentication, location tracki
 5.  Have the Android or iOS projects started yet? How does collaboration happen? Technical Lead?
 6.  Web solution to start? 
 7.  Which payment solutions did you have in mind? 
+8.  Timeline?
 
 
 

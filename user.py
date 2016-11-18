@@ -10,7 +10,7 @@ import scrambler
 # Public Functions
 def create_user(user_params):
 	user = copy(user_params)
-	validate_signup_fields(user)
+	ensure_signup_fields(user)
 	validate_role(user)
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
@@ -19,8 +19,12 @@ def create_user(user_params):
 	validate_all_required_fields(user)
 	return insert_user(user) # TODO add error handling
 
+def edit_user(user_id, user_params):
+	user_updates = copy_editable_fields(user_params)
+	return update_user(user_id,user_updates) # TODO add error handling
+
 # User Validation
-def validate_signup_fields(user_params):
+def ensure_signup_fields(user_params):
 	for user_param in USER_SIGNUP_FIELDS:
 		if user_param not in user_params:
 			error_bad_request("Missing Field: " + user_param)	
@@ -30,6 +34,14 @@ def validate_all_required_fields(user_params):
 		if user_param not in user_params:
 			error_bad_request("Missing Field: " + user_param)	
 
+def copy_editable_fields(user_params):
+	editable_fields = {}
+	for field in user_params:
+		if field in EDITABLE_USER_FIELDS:
+			editable_fields[field] = user_params[field]
+	return editable_fields
+
+# todo make sure they have proper permissions in order to validate
 def validate_role(user_params):
 	role = user_params["role"]
 	if role not in SUPPORTED_ROLES:
@@ -54,8 +66,8 @@ def insert_user(user):
 def get_users(query):
 	return list(get(query,"users"))
 
-def update_user(query,update,options,collection):
-	return update(query,update,options,collection)
+def update_user(user_id,user_updates):
+	return update({"_id":to_bson(user_id)},{"$set":user_updates},False,"users")
 
 def delete_user(user_id):
 	return delete({"_id":to_bson(user_id)},"users") 

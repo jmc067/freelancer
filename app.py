@@ -32,7 +32,7 @@ def signup():
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
-def user(user_id):
+def user_actions(user_id):
 
 	# READ
 	if request.method == 'GET':
@@ -42,7 +42,10 @@ def user(user_id):
 
 	# UPDATE
 	if request.method == 'POST':
-		return "UPDATE user by id"
+		validate_bson(user_id)
+		user_id = edit_user(user_id,request.values)
+		print user_id
+		return "true"
 
 	# DELETE
 	if request.method == 'DELETE':

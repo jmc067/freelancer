@@ -26,8 +26,8 @@ def insert(doc,collection):
 def get(query,collection):
 	return _mongodb[collection].find(query)
 
-def update(query,update,options,collection):
-	return _mongodb[collection].update(query,update,options)
+def update(query,update,upsert,collection):
+	return _mongodb[collection].update(query,update,upsert)
 
 def delete(query,collection):
 	return _mongodb[collection].remove(query)

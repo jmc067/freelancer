@@ -2,10 +2,11 @@
 Backend Application to offer account management, authentication, location tracking, location based search, peer to peer messaging, inbox notifications, job offer/acceptance workflow, and payment solution.
 
 ## Getting Started 
-2.  Build docker image (or use pre-built image)
-	- `docker build -t flask-sample-one:latest .`
-3.  Run docker container using image
-	- `docker run -d -p 5000:5000 flask-sample-one
+1.  `cd freelancer`
+2.  Build docker-compose
+	- `docker-compose build .`
+3.  Run docker-compose
+	- `docker-compose up`
 4.  Make sure its running
 	- `docker ps -a`
 5.  Resources

@@ -33,8 +33,8 @@ Backend Application to offer account management, authentication, location tracki
 - `GET /inbox`   <- Gets inbox for user id
 - `POST /send`  <- Sends and stores message into inbox for user id
 
-### Job Routes
-- `POST /job`   <- Creates or Updates job by id
+### Ledger Routes
+- `POST /job`   <- Creates or Updates Job by id
 - `GET /jobs`   <- Gets jobs for query
 - `POST /job/:id/status` <- Updates job status by job id
 
@@ -55,7 +55,7 @@ Backend Application to offer account management, authentication, location tracki
 	"first_name":String,
 	"last_name":String,
 	"inbox_id":<BSON::ObjectID>,
-	"jobs_id":<BSON::ObjectID>,
+	"ledger_id":<BSON::ObjectID>,
 	"roles":Array(CLIENT,WORKER,ADMIN)
 	"email":String,
 	"salted_password":<BCRYPT>,
@@ -78,16 +78,16 @@ Backend Application to offer account management, authentication, location tracki
 	"timestamp":Date
 }
 ```
-### Job
+### Ledger
 ```
 {
 	"_id":<BSON::ObjectID>,
 	"title":String,
 	"description":String,
-	"status_log":Array(<Status>)
+	"logs":Array(<Entry>)
 }
 ```
-### Status
+### Entry
 ```
 {
 	"status":String(REQUESTED,ACCEPTED,DECLINED,STARTED,COMPLETED,PENDING_PAYMENT,PAID),
@@ -132,6 +132,8 @@ Backend Application to offer account management, authentication, location tracki
 4.  Make sure user has picture before allowing ACCEPT.  Warn client about picture when REQUESTED
 5.  Convert from Flask to Flastk/Gunicorn 
 	- Check out http://matthewminer.com/2015/01/25/docker-dev-environment-for-web-app.html
+6.  Add Oauth2
+7.  `export DEBUG=true` to see logs
 
 
 # Questions

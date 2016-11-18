@@ -6,5 +6,6 @@ COPY . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
 RUN pip install pymongo==2.6.3
+RUN pip install bcrypt
 ENTRYPOINT ["python"]
 CMD ["app.py"]

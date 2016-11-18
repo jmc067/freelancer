@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import request
-from flask import abort
 import os
 from mongo import connect_mongo
 from user import *
@@ -8,29 +7,24 @@ from errors import *
 app = Flask(__name__)
 
 ####################################
-### Constants
-####################################
-REQUIRED_USER_FIELDS = ["first_name","last_name","role","email","salted_password","token","inbox_id","jobs_id"]
-SUPPORTED_ROLES = ["CLIENT","WORKER","ADMIN"]
-
-
-####################################
 ### Establish Mongo Connection
 ####################################
 connect_mongo() 
 
+####################################
+### Welcome Message
+####################################
 @app.route("/")
-def hello():
+def welcome():
     return "Welcome to freelancer!"
 
 ####################################
-### Define Routes
+### User Routes
 ####################################
 # CREATE user
 @app.route('/user', methods = ['POST'])
-def create_user():
-	# check_user_fields(request.values)
-	return str(store_user(request.values))
+def new_user():
+	return str(create_user(request.values))
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
@@ -53,29 +47,6 @@ def xxx(user_id):
 def user(user_id):
 	return "GET all users"
 
-
-
-####################################
-### Helper Functions
-####################################
-
-# Validate user values
-def check_user_fields(user_fields):
-	for user_field in REQUIRED_USER_FIELDS:
-		# Ensure Required fields are all present
-		if user_field in user_fields:
-			# Validate user role
-			if user_field=="role":
-				if user_fields[user_field] not in SUPPORTED_ROLES:
-					error_bad_request("Unsupported Role")	
-		else:
-			message = "Missing Field: " + user_field 
-			error_bad_request(message)	
-	return True
-
-# Returns formatted message
-def format_message(string):
-	return {'message': string}
 
 
 # SERVER START UP

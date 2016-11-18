@@ -1,13 +1,16 @@
 # Freelancer Backend API
 Backend Application to offer account management, authentication, location tracking, location based search, peer to peer messaging, inbox notifications, job offer/acceptance workflow, and payment solution.
 
-## Getting Started (http://containertutorials.com/docker-compose/flask-simple-app.html)
-1.  Build docker image (or use pre-built image)
+## Getting Started 
+2.  Build docker image (or use pre-built image)
 	- `docker build -t flask-sample-one:latest .`
-2.  Run docker container using image
+3.  Run docker container using image
 	- `docker run -d -p 5000:5000 flask-sample-one
-3.  Make sure its running
+4.  Make sure its running
 	- `docker ps -a`
+5.  Resources
+	- http://containertutorials.com/docker-compose/flask-simple-app.html
+	- https://docs.docker.com/machine/get-started/
 
 
 ## Routes
@@ -127,6 +130,8 @@ Backend Application to offer account management, authentication, location tracki
 3.  POST Job Routes should send automated message to user's inbox to notify the change
 	- REQUESTED,ACCEPTED,DECLINED each have separate messaging workflows
 4.  Make sure user has picture before allowing ACCEPT.  Warn client about picture when REQUESTED
+5.  Convert from Flask to Flastk/Gunicorn 
+	- Check out http://matthewminer.com/2015/01/25/docker-dev-environment-for-web-app.html
 
 
 # Questions

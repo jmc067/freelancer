@@ -2,6 +2,9 @@ from flask import Flask
 from flask import request
 from flask import abort
 import os
+from mongo import connect_mongo
+from user import *
+from errors import *
 app = Flask(__name__)
 
 ####################################
@@ -10,22 +13,28 @@ app = Flask(__name__)
 REQUIRED_USER_FIELDS = ["first_name","last_name","role","email","salted_password","token","inbox_id","jobs_id"]
 SUPPORTED_ROLES = ["CLIENT","WORKER","ADMIN"]
 
+
+####################################
+### Establish Mongo Connection
+####################################
+connect_mongo() 
+
 @app.route("/")
 def hello():
     return "Welcome to freelancer!"
 
 ####################################
-### Account Management Routes
+### Define Routes
 ####################################
 # CREATE user
 @app.route('/user', methods = ['POST'])
 def create_user():
-	check_user_fields(request.values)
-	return store_user("user")
+	# check_user_fields(request.values)
+	return str(store_user(request.values))
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
-def user(user_id):
+def xxx(user_id):
 
 	# READ
 	if request.method == 'GET':
@@ -49,9 +58,6 @@ def user(user_id):
 ####################################
 ### Helper Functions
 ####################################
-# Store User
-def store_user(user):
-	return user
 
 # Validate user values
 def check_user_fields(user_fields):
@@ -65,14 +71,12 @@ def check_user_fields(user_fields):
 		else:
 			message = "Missing Field: " + user_field 
 			error_bad_request(message)	
-
 	return True
 
-def error_bad_request(message):
-	abort(400,format_message(message))
-
+# Returns formatted message
 def format_message(string):
 	return {'message': string}
+
 
 # SERVER START UP
 if __name__ == "__main__":

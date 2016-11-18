@@ -3,18 +3,27 @@ from constants import *
 from errors import *
 from inbox import *
 from ledger import *
+from dict_helpers import *
 import scrambler
 
+# Public Functions
 def create_user(user_params):
 	user = copy(user_params)
 	validate_signup_fields(user)
 	validate_role(user)
-	setup_inbox(user) # add error handling
-	setup_ledger(user)  # add error handling
+	setup_inbox(user) # TODO add error handling
+	setup_ledger(user)  # TODO add error handling
 	clean(user)
 	validate_all_required_fields(user)
-	return insert_user(user) # add error handling
+	return insert_user(user) # TODO add error handling
 
+def get_users():
+	users = get_user({}) # TODO add error handling
+	for user in users:
+		pretty_print(user)
+	return True
+
+# User Validation
 def validate_signup_fields(user_params):
 	for user_param in USER_SIGNUP_FIELDS:
 		if user_param not in user_params:
@@ -30,12 +39,7 @@ def validate_role(user_params):
 	if role not in SUPPORTED_ROLES:
 		error_bad_request("Unsupported Role")	
 
-def copy(user_params):
-	user = {}
-	for user_param in user_params:
-		user[user_param] = user_params[user_param]
-	return user
-
+# Formatting
 def clean(user): 
 	for field in SUPPORTED_USER_FIELDS:
 		if field=="salted_password":
@@ -45,5 +49,12 @@ def clean(user):
 			user[field] = str(user[field])
 	return user
 
+# Mongo Funcitons
 def insert_user(user):
 	return insert(user,"users")	
+
+def get_user(query):
+	return list(get(query,"users"))
+
+def update(query,update,options,collection):
+	return update(query,update,options,collection)

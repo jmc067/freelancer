@@ -4,6 +4,7 @@ import os
 from mongo import connect_mongo
 from user import *
 from errors import *
+from jsonify import *
 app = Flask(__name__)
 
 ####################################
@@ -24,7 +25,7 @@ def welcome():
 # CREATE user
 @app.route('/user', methods = ['POST'])
 def new_user():
-	return str(create_user(request.values))
+	return to_json(create_user(request.values))
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
@@ -44,8 +45,8 @@ def xxx(user_id):
 
 # GET users
 @app.route('/users', methods = ['GET'])
-def user(user_id):
-	return "GET all users"
+def list_users():
+	return to_json(get_users())
 
 
 

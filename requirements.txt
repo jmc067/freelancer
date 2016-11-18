@@ -1,1 +1,3 @@
 Flask==0.10.1
+pymongo==2.6.3
+bcrypt

@@ -40,22 +40,6 @@ def signup():
 	user = create_user(request.values)
 	return to_json(clean_dict(user))
 
-@app.route('/user/login', methods = ['POST'])
-def login():
-	scramble_token = authorize(request.values)
-	return to_json(str(scramble_token))
-
-@app.route('/user/logout', methods = ['POST'])
-def logout():
-	deactivated = deactivate_session(request.values)
-	return to_json(str(deactivated))
-
-@app.route('/user/extend_session', methods = ['POST'])
-def extend():
-	extended = extend_session(request.values)
-	return to_json(str(extended))
-
-
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])
 def user_actions(user_id):
@@ -84,6 +68,25 @@ def list_users():
 	users = [ clean_dict(user) for user in search_users(request.values) ]
 	return to_json(users)
 
+####################################
+### Auth Routes
+####################################
+
+@app.route('/user/login', methods = ['POST'])
+def login():
+	scramble_token = authorize(request.values)
+	return to_json(str(scramble_token))
+
+@app.route('/user/logout', methods = ['POST'])
+def logout():
+	deactivated = deactivate_session(request.values)
+	return to_json(str(deactivated))
+
+@app.route('/user/extend_session', methods = ['POST'])
+def extend():
+	extended = extend_session(request.values)
+	return to_json(str(extended))
+
 
 ####################################
 ### Category Routes
@@ -94,6 +97,34 @@ def list_users():
 def new_category():
 	category = create_category(request.values)
 	return to_json(category)
+
+# READ, UPDATE, DELETE category
+@app.route('/category/<category_id>', methods = ['GET', 'POST', 'DELETE'])
+def category_actions(category_id):
+
+	# READ
+	if request.method == 'GET':
+		validate_bson(category_id)
+		category = [ clean_dict(category) for category in get_categories({"_id":to_bson(category_id)}) ]
+		return to_json(category)
+
+	# UPDATE
+	if request.method == 'POST':
+		validate_bson(category_id)
+		category_id = edit_category(category_id,request.values)
+		return to_json(str(True))
+
+	# DELETE
+	# if request.method == 'DELETE':
+	# 	validate_bson(category_id)
+	# 	delete_category(category_id)
+	# 	return to_json(str(True))
+
+# GET categories
+# @app.route('/category/search', methods = ['GET'])
+# def list_categories():
+# 	categories = [ clean_dict(category) for category in search_categories(request.values) ]
+# 	return to_json(categories)
 
 
 # SERVER START UP

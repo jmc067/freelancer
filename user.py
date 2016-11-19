@@ -52,7 +52,7 @@ def check_authorization(params):
 	ensure_session(params["scramble"])	
 
 def edit_user(user_id, user_params):
-	user_updates = copy_editable_fields(user_params)
+	user_updates = copy_editable_user_fields(user_params)
 	return update_user(user_id,user_updates) # TODO add error handling.  Have a been response than mongo output
 
 # User Validation
@@ -118,7 +118,7 @@ def format_user_response(user):
 				formatted_user_response[user_param] = user[user_param]
 	return formatted_user_response
 
-def copy_editable_fields(user_params):
+def copy_editable_user_fields(user_params):
 	editable_fields = {}
 	for field in user_params:
 		if field in EDITABLE_USER_FIELDS:

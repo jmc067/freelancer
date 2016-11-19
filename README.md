@@ -16,18 +16,24 @@ Backend Application to offer account management, authentication, location tracki
 
 ## Routes
 ### Account Management Routes
-- `POST /signup`  <- Creates user
-- `POST /user`    <- Updates user by id
-- `GET /user`     <- Gets the user by id
-- `DELETE /user`  <- Deletes user by id
-- `GET /users`    <- Gets list of users by query
+- `POST /user/signup`  <- Creates user
+- `POST /user/:user_id`    <- Updates user by id
+- `GET /user/:user_id`     <- Returns the user by id
+- `DELETE /user/:user_id`  <- Deletes user by id
+- `GET /users/search`    <- Returns list of users by query
+
+### Category Management Routes
+- `POST /category/new`  <- Creates a new category (or sub-category)
+- `POST /category/:category_id`    <- Updates category by id
+- `GET /category/:category_id`     <- Gets the category by id
+- `DELETE /category/:category_id`  <- Deletes category by id
+- `GET /category/search`    <- Gets list of categories by query
 
 ### Authentication Routes
 - `POST /login`    <- Returns scramble token upon valid authorize (email/password).  Stores active session in Redis
 - `POST /logout`   <- Removes active session in Redis
 - `POST /extend`   <- Extends TTL of redis session
 - `check_authorization` <- Check session scramble before each route
-
 
 ### Location Routes
 - `POST /location`  <- Stores user by id and location and ttl into Redis geodata 
@@ -64,6 +70,14 @@ Backend Application to offer account management, authentication, location tracki
 	"email":String,
 	"salted_password":<BCRYPT>,
 	"token":<OAUTH_TOKEN>
+}
+```
+### Category
+```
+{
+	"_id":<BSON::ObjectID>,
+	"name":String,
+	"description":String
 }
 ```
 ### Inbox
@@ -139,12 +153,14 @@ Backend Application to offer account management, authentication, location tracki
 6.  Add Oauth2
 7.  `export DEBUG=true` to see logs
 8.  Refactor to use classes
+9.  Refactor authorization/session out of user.py
 
 
 
 # Progress
 1.  User CRUD (Create,Read,Update,Delete)
 2.  Authorization / Sessions
+3.  Category CRUD (in progress..) 
 
 
 

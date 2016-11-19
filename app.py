@@ -34,22 +34,22 @@ def before_request():
 ### User Routes
 ####################################
 # CREATE user
-@app.route('/signup', methods = ['POST'])
+@app.route('/user/signup', methods = ['POST'])
 def signup():
 	user = create_user(request.values)
-	return to_json(user)
+	return to_json(clean_dict(user))
 
-@app.route('/login', methods = ['POST'])
+@app.route('/user/login', methods = ['POST'])
 def login():
 	scramble_token = authorize(request.values)
 	return to_json(str(scramble_token))
 
-@app.route('/logout', methods = ['POST'])
+@app.route('/user/logout', methods = ['POST'])
 def logout():
 	deactivated = deactivate_session(request.values)
 	return to_json(str(deactivated))
 
-@app.route('/extend', methods = ['POST'])
+@app.route('/user/extend_session', methods = ['POST'])
 def extend():
 	extended = extend_session(request.values)
 	return to_json(str(extended))
@@ -62,7 +62,7 @@ def user_actions(user_id):
 	# READ
 	if request.method == 'GET':
 		validate_bson(user_id)
-		user = [ clean(user) for user in get_users({"_id":to_bson(user_id)}) ]
+		user = [ clean_dict(user) for user in get_users({"_id":to_bson(user_id)}) ]
 		return to_json(user)
 
 	# UPDATE
@@ -77,10 +77,22 @@ def user_actions(user_id):
 		return to_json(str(True))
 
 # GET users
-@app.route('/users', methods = ['GET'])
+@app.route('/user/search', methods = ['GET'])
 def list_users():
-	users = [ clean(user) for user in search_users(request.values) ]
+	users = [ clean_dict(user) for user in search_users(request.values) ]
 	return to_json(users)
+
+
+
+####################################
+### Category Routes
+####################################
+
+# CREATE user
+@app.route('/category/new', methods = ['POST'])
+def new_category():
+	category = create_category(request.values)
+	return to_json(category)
 
 
 # SERVER START UP

@@ -7,6 +7,8 @@ from ledger import *
 from dict_helpers import *
 from bsonify import *
 import scrambler
+# TODO refactor out auth/session into seperate file
+# TODO refactor to use Python Classes
 
 # Public Functions
 # TODO make sure email isn't already in use
@@ -17,10 +19,9 @@ def create_user(user_params):
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
 	salt_password(user)
+	format_user(user)
 	user.update({"_id":str(insert_user(user))}) # TODO add error handling
-	clean(user)
-	validate_all_required_fields(user)
-	return user 
+	return format_user_response(user)
 
 def search_users(params):
 	query = {}
@@ -101,14 +102,17 @@ def activate_session(user_id):
 	return scramble
 
 def ensure_signup_fields(user_params):
-	for user_param in USER_SIGNUP_FIELDS:
+	for user_param in SIGNUP_USER_FIELDS:
 		if user_param not in user_params:
 			error_bad_request("Missing Field: " + user_param)	
 
-def validate_all_required_fields(user_params):
-	for user_param in REQUIRED_USER_FIELDS:
-		if user_param not in user_params:
-			error_bad_request("Missing Field: " + user_param)	
+def format_user_response(user):
+	formatted_user_response = {}
+	for user_param in SUPPORTED_USER_FIELDS :
+		if user_param not in SENSITIVE_USER_FIELDS:
+			if user_param in user:
+				formatted_user_response[user_param] = user[user_param]
+	return formatted_user_response
 
 def copy_editable_fields(user_params):
 	editable_fields = {}
@@ -120,21 +124,18 @@ def copy_editable_fields(user_params):
 # todo make sure they have proper permissions in order to validate
 def validate_role(user_params):
 	role = user_params["role"]
-	if role not in SUPPORTED_ROLES:
+	if role not in SUPPORTED_USER_ROLES:
 		error_bad_request("Unsupported Role")	
 
 # Formatting
 def salt_password(user):
-	if field=="salted_password":
-		user["salted_password"] = scrambler.hash(user["password"])	
-		user.pop("password")
+	user["salted_password"] = scrambler.hash(user["password"])	
+	user.pop("password")
 
-def clean(user): 
+def format_user(user):
 	for field in SUPPORTED_USER_FIELDS:
-		if field=="_id" or field=="inbox_id" or field=="ledger_id":
-			if field in user:
-				user[field] = str(user[field])
-	return user
+		if field in user:
+			user[field] = user[field]
 
 # Mongo Funcitons
 def insert_user(user):

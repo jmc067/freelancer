@@ -47,3 +47,6 @@ def get_categories(query):
 
 def update_category(category_id,category_updates):
 	return mongo_burrito.update({"_id":to_bson(category_id)},{"$set":category_updates},False,"categories")
+
+def delete_category(category_id):
+	return mongo_burrito.delete({"_id":to_bson(category_id)},"categories") 

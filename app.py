@@ -115,10 +115,10 @@ def category_actions(category_id):
 		return to_json(str(True))
 
 	# DELETE
-	# if request.method == 'DELETE':
-	# 	validate_bson(category_id)
-	# 	delete_category(category_id)
-	# 	return to_json(str(True))
+	if request.method == 'DELETE':
+		validate_bson(category_id)
+		delete_category(category_id)
+		return to_json(str(True))
 
 # GET categories
 # @app.route('/category/search', methods = ['GET'])

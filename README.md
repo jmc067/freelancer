@@ -26,6 +26,7 @@ Backend Application to offer account management, authentication, location tracki
 - `POST /login`    <- Returns scramble token upon valid authorize (email/password).  Logs active session in Redis Geospacial
 - `POST /logout`   <- Removes active session in Redis Geospacial
 - `POST /extend`   <- Extends TTL of redis session
+- `check_authorization` <- Check session scramble before each route
 
 
 ### Location Routes

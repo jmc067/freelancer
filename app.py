@@ -39,8 +39,18 @@ def signup():
 
 @app.route('/login', methods = ['POST'])
 def login():
-	legit = authorize(request.values)
-	return to_json(str(legit))
+	scramble_token = authorize(request.values)
+	return to_json(str(scramble_token))
+
+@app.route('/logout', methods = ['POST'])
+def logout():
+	deactivated = deactivate_session(request.values)
+	return to_json(str(deactivated))
+
+@app.route('/extend', methods = ['POST'])
+def extend():
+	extended = extend_session(request.values)
+	return to_json(str(extended))
 
 
 # READ, UPDATE, DELETE user

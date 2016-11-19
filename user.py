@@ -28,6 +28,16 @@ def authorize(params):
 	validate_password(params["password"],user["salted_password"])
 	return activate_session(user["_id"])
 
+def deactivate_session(params):
+	ensure_scramble(params)
+	expire_session(params["scramble"])	
+	return True
+
+def extend_session(params):
+	ensure_scramble(params)
+	extend_expiration(params["scramble"])	
+	return True
+
 def check_authorization(params):
 	ensure_scramble(params)
 	ensure_session(params["scramble"])	
@@ -61,15 +71,26 @@ def ensure_scramble(params):
 		error_bad_request("No scramble token provided") 
 
 # TODO make sure user matches scramble?
+#  add ttl for session expiration
 def ensure_session(scramble):
-	if redis_taco.get(scramble):
-		return True
-	else:
+	user_id = redis_taco.get(scramble)
+	print user_id
+	if user_id==None:
 		error_forbidden("No session found")
+	else:
+		return True
+
+def expire_session(scramble):
+	redis_taco.delete(scramble)
+
+def extend_expiration(scramble):
+	redis_taco.expire(scramble,SESSION_LENGTH)
+	return True
 
 def activate_session(user_id):
 	scramble = scrambler.scramble()
 	redis_taco.set(scramble,user_id)
+	redis_taco.expire(scramble,SESSION_LENGTH)
 	return scramble
 
 def ensure_signup_fields(user_params):

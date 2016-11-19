@@ -1,4 +1,5 @@
 from redis import Redis
+from constants import *
 
 _redis = None
 
@@ -12,8 +13,6 @@ def connect():
 			host='127.0.0.1', 
 			port=6379
 		)
-		print _redis
-		_redis.set("test","true")
 		if _redis==None:
 			raise ValueError('Error connecting to Redis')		
 		else:
@@ -22,11 +21,18 @@ def connect():
 	else:
 		return _redis
 
+# TODO error handling if set didnt work
 def set(key,value):
-	_redis.set(str(key), str(value))
+	return _redis.set(str(key), str(value))
+
+def expire(key,ttl):
+	return _redis.expire(str(key), ttl)
 
 def get(key):
-	_redis.get(str(key))
+	return _redis.get(str(key))
+
+def delete(key):
+	return _redis.delete(str(key))
 
 
 

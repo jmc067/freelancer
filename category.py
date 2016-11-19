@@ -16,6 +16,14 @@ def edit_category(category_id, category_params):
 	if category_updates:
 		return update_category(category_id,category_updates) # TODO add error handling.  Have a been response than mongo output
 
+def search_categories(params):
+	query = {}
+	for param in params:
+		if param in SUPPORTED_CATEGORY_FIELDS:   # you can search for any supported field on category doc
+			query[param] = params[param]
+	return get_categories(query)	
+
+
 def ensure_create_category_fields(category_params):
 	for category_param in CREATE_CATEGORY_FIELDS:
 		if category_param not in category_params:

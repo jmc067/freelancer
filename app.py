@@ -121,10 +121,10 @@ def category_actions(category_id):
 		return to_json(str(True))
 
 # GET categories
-# @app.route('/category/search', methods = ['GET'])
-# def list_categories():
-# 	categories = [ clean_dict(category) for category in search_categories(request.values) ]
-# 	return to_json(categories)
+@app.route('/category/search', methods = ['GET'])
+def list_categories():
+	categories = [ clean_dict(category) for category in search_categories(request.values) ]
+	return to_json(categories)
 
 
 # SERVER START UP

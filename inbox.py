@@ -1,4 +1,4 @@
-from mongo import *
+import mongo_burrito
 from constants import *
 
 def setup_inbox(user):
@@ -10,4 +10,4 @@ def new_inbox():
 	}
 
 def insert_inbox(inbox):
-	return insert(inbox,"inboxes")	
+	return mongo_burrito.insert(inbox,"inboxes")	

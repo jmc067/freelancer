@@ -1,4 +1,4 @@
-from mongo import *
+import mongo_burrito
 from constants import *
 
 def setup_ledger(user):
@@ -10,4 +10,4 @@ def new_ledger():
 	}
 
 def insert_ledger(ledger):
-	return insert(ledger,"ledgers")	
+	return mongo_burrito.insert(ledger,"ledgers")	

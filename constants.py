@@ -9,3 +9,5 @@ EDITABLE_USER_FIELDS = ["first_name","last_name","email"]
 REQUIRED_USER_FIELDS = [field for field in SUPPORTED_USER_FIELDS if field not in SENSITIVE_USER_FIELDS] 
 
 SUPPORTED_ROLES = ["CLIENT","WORKER","ADMIN"]
+
+AUTHENTICATION_FIELDS = ["email","password"]

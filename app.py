@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import request
 import os
-from mongo import connect_mongo
+import mongo_burrito
+import redis_taco
 from user import *
 from errors import *
 from jsonify import *
@@ -10,9 +11,10 @@ from bsonify import *
 app = Flask(__name__)
 
 ####################################
-### Establish Mongo Connection
+### Establish Database Connections
 ####################################
-connect_mongo() 
+mongo_burrito.connect() 
+redis_taco.connect()
 
 ####################################
 ### Welcome Message
@@ -21,14 +23,25 @@ connect_mongo()
 def welcome():
     return "Welcome to freelancer!"
 
+@app.before_request
+def before_request():
+	if request.path!="/login":
+		check_authorization(request.values)
+
 ####################################
 ### User Routes
 ####################################
 # CREATE user
 @app.route('/signup', methods = ['POST'])
 def signup():
-	user_id = create_user(request.values)
-	return to_json(str(user_id))
+	user = create_user(request.values)
+	return to_json(user)
+
+@app.route('/login', methods = ['POST'])
+def login():
+	legit = authorize(request.values)
+	return to_json(str(legit))
+
 
 # READ, UPDATE, DELETE user
 @app.route('/user/<user_id>', methods = ['GET', 'POST', 'DELETE'])

@@ -23,8 +23,9 @@ Backend Application to offer account management, authentication, location tracki
 - `GET /users`    <- Gets list of users by query
 
 ### Authentication Routes
-- `POST /authorize`    <- Returns access token upon valid authorize (email/password).  Logs active session in Redis Geospacial
-- `POST /authorize`    <- Returns access token upon valid authorize (email/password).  Removes active session in Redis Geospacial
+- `POST /login`    <- Returns scramble token upon valid authorize (email/password).  Logs active session in Redis Geospacial
+- `POST /logout`   <- Removes active session in Redis Geospacial
+- `POST /extend`   <- Extends TTL of redis session
 
 
 ### Location Routes
@@ -127,8 +128,8 @@ Backend Application to offer account management, authentication, location tracki
 
 
 # Notes
-1.  Each request should extend ttl on user access token
-2.  User access token should have a 1-to-1 relationship with the user.  aka lookup from access token to user.  Each user should have their own access token on their account.
+1.  Each request should extend ttl on user scramble token
+2.  User scramble token should have a 1-to-1 relationship with the user.  aka lookup from scramble token to user.  Each user should have their own scramble token on their account.
 3.  POST Job Routes should send automated message to user's inbox to notify the change
 	- REQUESTED,ACCEPTED,DECLINED each have separate messaging workflows
 4.  Make sure user has picture before allowing ACCEPT.  Warn client about picture when REQUESTED

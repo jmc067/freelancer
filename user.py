@@ -1,4 +1,5 @@
-from mongo import *
+import mongo_burrito
+import redis_taco
 from constants import *
 from errors import *
 from inbox import *
@@ -8,6 +9,7 @@ from bsonify import *
 import scrambler
 
 # Public Functions
+# TODO make sure email isn't already in use
 def create_user(user_params):
 	user = copy(user_params)
 	ensure_signup_fields(user)
@@ -15,15 +17,61 @@ def create_user(user_params):
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
 	salt_password(user)
+	user.update({"_id":str(insert_user(user))}) # TODO add error handling
 	clean(user)
 	validate_all_required_fields(user)
-	return insert_user(user) # TODO add error handling
+	return user 
+
+def authorize(params):
+	ensure_authentication_fields(params)
+	user = ensure_user(params["email"])
+	validate_password(params["password"],user["salted_password"])
+	return activate_session(user["_id"])
+
+def check_authorization(params):
+	ensure_scramble(params)
+	ensure_session(params["scramble"])	
 
 def edit_user(user_id, user_params):
 	user_updates = copy_editable_fields(user_params)
-	return update_user(user_id,user_updates) # TODO add error handling
+	return update_user(user_id,user_updates) # TODO add error handling.  Have a been response than mongo output
 
 # User Validation
+def ensure_authentication_fields(params):
+	for field in AUTHENTICATION_FIELDS:
+		if field not in params:
+			error_bad_request("Insufficient Authentication fields")
+
+def ensure_user(email):
+	users = get_users({"email":email})
+	print users
+	if len(users)==0:
+		error_bad_request("No account registered with this email")
+	elif len(users)==1:
+		return users[0]
+	else:
+		error_bad_request("Oh no!  It seems that there are multiple accounts associated with this email.\nFor your security, you must contact an administrator before continuing")
+
+def validate_password(password,salted_password):
+	if not scrambler.is_match(password,salted_password): 
+		error_forbidden("Incorrect Email or Password")
+
+def ensure_scramble(params):
+	if "scramble" not in params:
+		error_bad_request("No scramble token provided") 
+
+# TODO make sure user matches scramble?
+def ensure_session(scramble):
+	if redis_taco.get(scramble):
+		return True
+	else:
+		error_forbidden("No session found")
+
+def activate_session(user_id):
+	scramble = scrambler.scramble()
+	redis_taco.set(scramble,user_id)
+	return scramble
+
 def ensure_signup_fields(user_params):
 	for user_param in USER_SIGNUP_FIELDS:
 		if user_param not in user_params:
@@ -56,18 +104,19 @@ def salt_password(user):
 def clean(user): 
 	for field in SUPPORTED_USER_FIELDS:
 		if field=="_id" or field=="inbox_id" or field=="ledger_id":
-			user[field] = str(user[field])
+			if field in user:
+				user[field] = str(user[field])
 	return user
 
 # Mongo Funcitons
 def insert_user(user):
-	return insert(user,"users")	
+	return mongo_burrito.insert(user,"users")	
 
 def get_users(query):
-	return list(get(query,"users"))
+	return list(mongo_burrito.get(query,"users"))
 
 def update_user(user_id,user_updates):
-	return update({"_id":to_bson(user_id)},{"$set":user_updates},False,"users")
+	return mongo_burrito.update({"_id":to_bson(user_id)},{"$set":user_updates},False,"users")
 
 def delete_user(user_id):
-	return delete({"_id":to_bson(user_id)},"users") 
+	return mongo_burrito.delete({"_id":to_bson(user_id)},"users") 

@@ -28,6 +28,7 @@ def welcome():
 def before_request():
 	if request.path not in PUBLIC_ROUTES:
 		check_authorization(request.values)
+		extend_session(request.values)
 
 ####################################
 ### User Routes
@@ -80,7 +81,6 @@ def user_actions(user_id):
 def list_users():
 	users = [ clean(user) for user in search_users(request.values) ]
 	return to_json(users)
-
 
 
 # SERVER START UP

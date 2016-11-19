@@ -7,6 +7,7 @@ from user import *
 from errors import *
 from jsonify import *
 from bsonify import *
+from constants import *
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def welcome():
 
 @app.before_request
 def before_request():
-	if request.path!="/login":
+	if request.path not in PUBLIC_ROUTES:
 		check_authorization(request.values)
 
 ####################################
@@ -67,18 +68,17 @@ def user_actions(user_id):
 	if request.method == 'POST':
 		validate_bson(user_id)
 		user_id = edit_user(user_id,request.values)
-		print user_id
-		return "true"
+		return to_json(str(True))
 
 	# DELETE
 	if request.method == 'DELETE':
 		validate_bson(user_id)
-		return str(delete_user(user_id))
+		return to_json(str(True))
 
 # GET users
 @app.route('/users', methods = ['GET'])
 def list_users():
-	users = [ clean(user) for user in get_users({}) ]
+	users = [ clean(user) for user in search_users(request.values) ]
 	return to_json(users)
 
 

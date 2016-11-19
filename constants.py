@@ -14,3 +14,5 @@ AUTHENTICATION_FIELDS = ["email","password"]
 
 HOUR = 3600
 SESSION_LENGTH = HOUR * 2
+
+PUBLIC_ROUTES = ["/signup","/login"]

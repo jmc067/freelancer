@@ -138,17 +138,14 @@ Backend Application to offer account management, authentication, location tracki
 	- Check out http://matthewminer.com/2015/01/25/docker-dev-environment-for-web-app.html
 6.  Add Oauth2
 7.  `export DEBUG=true` to see logs
+8.  Refactor to use classes
 
 
-# Questions
-1.  Are there UI Designs? UX Workflow? Product Specs? 
-2.  What is the request/accept workflow?  Preferred? MVP? 
-3.  Database Preference?  Why MySQL?
-4.  Language Preference?  Why Javascritpt?
-5.  Have the Android or iOS projects started yet? How does collaboration happen? Technical Lead?
-6.  Web solution to start? 
-7.  Which payment solutions did you have in mind? 
-8.  Timeline?
+
+# Progress
+1.  User CRUD (Create,Read,Update,Delete)
+2.  Authorization / Sessions
+
 
 
 

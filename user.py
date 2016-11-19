@@ -22,6 +22,13 @@ def create_user(user_params):
 	validate_all_required_fields(user)
 	return user 
 
+def search_users(params):
+	query = {}
+	for param in params:
+		if param in SUPPORTED_USER_FIELDS:   # you can search for any supported field on user doc
+			query[param] = params[param]
+	return get_users(query)	
+
 def authorize(params):
 	ensure_authentication_fields(params)
 	user = ensure_user(params["email"])

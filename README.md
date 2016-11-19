@@ -157,12 +157,4 @@ Backend Application to offer account management, authentication, location tracki
 
 
 
-# Progress
-1.  User CRUD (Create,Read,Update,Delete)
-2.  Authorization / Sessions
-3.  Category CRUD (in progress..) 
-
-
-
-
 

@@ -4,6 +4,7 @@ import os
 import mongo_burrito
 import redis_taco
 from user import *
+from category import *
 from errors import *
 from jsonify import *
 from bsonify import *
@@ -84,13 +85,12 @@ def list_users():
 	return to_json(users)
 
 
-
 ####################################
 ### Category Routes
 ####################################
 
 # CREATE user
-@app.route('/category/new', methods = ['POST'])
+@app.route('/category/create', methods = ['POST'])
 def new_category():
 	category = create_category(request.values)
 	return to_json(category)

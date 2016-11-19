@@ -20,7 +20,7 @@ def create_user(user_params):
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
 	salt_password(user)
-	format_user(user)
+	user = format_user(user)
 	user.update({"_id":str(insert_user(user))}) # TODO add error handling
 	return format_user_response(user)
 
@@ -137,9 +137,11 @@ def salt_password(user):
 	user.pop("password")
 
 def format_user(user):
+	formatted_user = {}
 	for field in SUPPORTED_USER_FIELDS:
 		if field in user:
-			user[field] = user[field]
+			formatted_user[field] = user[field]
+	return formatted_user
 
 # Mongo Funcitons
 def insert_user(user):

@@ -74,6 +74,7 @@ def user_actions(user_id):
 	# DELETE
 	if request.method == 'DELETE':
 		validate_bson(user_id)
+		delete_user(user_id)
 		return to_json(str(True))
 
 # GET users

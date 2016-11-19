@@ -8,6 +8,7 @@ SIGNUP_USER_FIELDS = ["email","first_name","last_name","role"]
 AUTO_GENERATED_USER_FIELDS = ["_id","inbox_id","ledger_id","salted_password"]
 SUPPORTED_USER_FIELDS = SIGNUP_USER_FIELDS + AUTO_GENERATED_USER_FIELDS 
 EDITABLE_USER_FIELDS = ["first_name","last_name","email"]
+REQUIRED_USER_FIELDS = [field for field in SUPPORTED_USER_FIELDS if field not in SENSITIVE_USER_FIELDS] 
 
 # Category Constants
 SENSITIVE_CATEGORY_FIELDS = []

@@ -15,6 +15,7 @@ import scrambler
 def create_user(user_params):
 	user = copy(user_params)
 	ensure_signup_fields(user)
+	check_email_availability(user_params["email"])
 	validate_role(user)
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
@@ -62,7 +63,6 @@ def ensure_authentication_fields(params):
 
 def ensure_user(email):
 	users = get_users({"email":email})
-	print users
 	if len(users)==0:
 		error_bad_request("No account registered with this email")
 	elif len(users)==1:
@@ -82,7 +82,6 @@ def ensure_scramble(params):
 #  add ttl for session expiration
 def ensure_session(scramble):
 	user_id = redis_taco.get(scramble)
-	print user_id
 	if user_id==None:
 		error_forbidden("No session found")
 	else:
@@ -105,6 +104,11 @@ def ensure_signup_fields(user_params):
 	for user_param in SIGNUP_USER_FIELDS:
 		if user_param not in user_params:
 			error_bad_request("Missing Field: " + user_param)	
+
+def check_email_availability(email):
+	users = get_users({"email":email})
+	if len(users) > 0:
+		error_bad_request("Account already registered with this email")	
 
 def format_user_response(user):
 	formatted_user_response = {}

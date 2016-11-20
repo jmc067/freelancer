@@ -5,6 +5,7 @@ import mongo_burrito
 import redis_taco
 from user import *
 from category import *
+from subcategory import *
 from errors import *
 from jsonify import *
 from bsonify import *
@@ -92,7 +93,7 @@ def extend():
 ### Category Routes
 ####################################
 
-# CREATE user
+# CREATE category
 @app.route('/category/create', methods = ['POST'])
 def new_category():
 	category = create_category(request.values)
@@ -124,6 +125,46 @@ def category_actions(category_id):
 @app.route('/category/search', methods = ['GET'])
 def list_categories():
 	categories = [ clean_dict(category) for category in search_categories(request.values) ]
+	return to_json(categories)
+
+
+
+####################################
+### Subategory Routes
+####################################
+
+# CREATE subcategory
+@app.route('/subcategory/create', methods = ['POST'])
+def new_subcategory():
+	subcategory = create_subcategory(request.values)
+	return to_json(subcategory)
+
+# READ, UPDATE, DELETE subcategory
+@app.route('/subcategory/<subcategory_id>', methods = ['GET', 'POST', 'DELETE'])
+def subcategory_actions(subcategory_id):
+
+	# READ
+	if request.method == 'GET':
+		validate_bson(subcategory_id)
+		subcategory = [ clean_dict(subcategory) for subcategory in get_subcategories({"_id":to_bson(subcategory_id)}) ]
+		return to_json(subcategory)
+
+	# UPDATE  TODO add better response 
+	if request.method == 'POST':
+		validate_bson(subcategory_id)
+		subcategory_id = edit_subcategory(subcategory_id,request.values)
+		return to_json(str(True))
+
+	# DELETE  TODO add better response
+	if request.method == 'DELETE':
+		validate_bson(subcategory_id)
+		delete_subcategory(subcategory_id)
+		return to_json(str(True))
+
+# GET categories
+@app.route('/subcategory/search', methods = ['GET'])
+def list_categories():
+	categories = [ clean_dict(subcategory) for subcategory in search_categories(request.values) ]
 	return to_json(categories)
 
 

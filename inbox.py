@@ -11,3 +11,6 @@ def new_inbox():
 
 def insert_inbox(inbox):
 	return mongo_burrito.insert(inbox,"inboxes")	
+
+def get_inbox(query):
+	return mongo_burrito.get(query,"inboxes")	

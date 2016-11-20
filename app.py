@@ -4,6 +4,7 @@ import os
 import mongo_burrito
 import redis_taco
 import tracker
+import postman
 from user import *
 from category import *
 from subcategory import *
@@ -184,6 +185,23 @@ def location():
 	# Query by location
 	if request.method == 'GET':
 		return True
+
+
+
+####################################
+### Messager Routes
+####################################
+
+@app.route('/send/<user_id>', methods = ['POST'])
+def deliver(user_id):
+	postman.deliver(user_id,request.values)
+	return "True"
+
+# @app.route('/inbox', methods = ['GET'])
+# def get_mail():
+# 	inbox = get_inbox(request.values)
+# 	print "inbox: " + inbox
+# 	return to_json(inbox)
 
 
 # SERVER START UP

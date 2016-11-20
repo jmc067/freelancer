@@ -1,16 +1,26 @@
-web:
-    build: .
-    command: python -u app.py
-    ports:
-        - "5000:5000"
-    volumes:
-        - .:/app
-    env_file:
-        - variables.env   
-    links:
-        - db
-db:
-    image: mongo:3.0.2
-redis:
-    image: redis
+version: '2'
+services:
+    web:
+        build: .
+        command: python -u app.py
+        ports:
+            - "5000:5000"
+        volumes:
+            - .:/app
+        env_file:
+            - variables.env   
+        links:
+            - mongo
+            - redis
+        depends_on:
+            - mongo
+            - redis
+    mongo:
+        image: mongo:3.0.2
+        ports:
+            - "27017:27017"
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
 

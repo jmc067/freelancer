@@ -19,7 +19,8 @@ app = Flask(__name__)
 ####################################
 ### Establish Database Connections
 ####################################
-mongo_burrito.connect() 
+print "brand new 4"
+mongo_burrito.connect()
 redis_taco.connect()
 
 ####################################
@@ -112,7 +113,7 @@ def category_actions(category_id):
 		category = [ clean_dict(category) for category in get_categories({"_id":to_bson(category_id)}) ]
 		return to_json(category)
 
-	# UPDATE  TODO add better response 
+	# UPDATE  TODO add better response
 	if request.method == 'POST':
 		validate_bson(category_id)
 		category_id = edit_category(category_id,request.values)
@@ -151,7 +152,7 @@ def subcategory_actions(subcategory_id):
 		subcategory = [ clean_dict(subcategory) for subcategory in get_subcategories({"_id":to_bson(subcategory_id)}) ]
 		return to_json(subcategory)
 
-	# UPDATE  TODO add better response 
+	# UPDATE  TODO add better response
 	if request.method == 'POST':
 		validate_bson(subcategory_id)
 		subcategory_id = edit_subcategory(subcategory_id,request.values)
@@ -174,7 +175,7 @@ def list_subcategories():
 ### Location Routes
 ####################################
 
-# POST Track users location 
+# POST Track users location
 @app.route('/location', methods = ['POST'])
 def location():
 	# Store by location
@@ -211,5 +212,4 @@ if __name__ == "__main__":
 		debug = True
 	else:
 		debug = False
-
-	app.run(debug=debug)
+	app.run(host='0.0.0.0',debug=debug,port=5000)

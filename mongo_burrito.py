@@ -10,7 +10,7 @@ def connect():
 		# Get Mongo Client
 		ON_COMPOSE = os.environ.get('COMPOSE')
 		if ON_COMPOSE:
-			mongo_client = MongoClient(os.environ['DB_PORT_27017_TCP_ADDR'],27017)
+			mongo_client = MongoClient("mongo",27017)
 		else:
 			mongo_client = MongoClient('mongodb://localhost:27017/')	
 

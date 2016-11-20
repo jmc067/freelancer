@@ -11,7 +11,6 @@ import scrambler
 # TODO refactor to use Python Classes
 
 # Public Functions
-# TODO make sure email isn't already in use
 def create_user(user_params):
 	user = copy(user_params)
 	ensure_signup_fields(user)

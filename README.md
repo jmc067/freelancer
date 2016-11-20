@@ -66,10 +66,10 @@ Backend Application to offer account management, authentication, location tracki
 	"last_name":String,
 	"inbox_id":<BSON::ObjectID>,
 	"ledger_id":<BSON::ObjectID>,
-	"roles":Array(CLIENT,WORKER,ADMIN)
+	"role":Array(CLIENT,WORKER,ADMIN)
 	"email":String,
 	"salted_password":<BCRYPT>,
-	"token":<OAUTH_TOKEN>
+	"photo":<image>
 }
 ```
 ### Category

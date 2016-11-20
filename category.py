@@ -7,6 +7,7 @@ from bsonify import *
 def create_category(category_params):
 	category = dict_helpers.copy(category_params)
 	ensure_create_category_fields(category)
+	check_category_availability(category)
 	category = format_category(category)
 	category.update({"_id":str(insert_category(category))}) # TODO add error handling
 	return format_category_response(category)
@@ -23,6 +24,16 @@ def search_categories(params):
 			query[param] = params[param]
 	return get_categories(query)	
 
+# TODO add error handling
+def delete_category_tree(category_id):
+	delete_category(category_id)	
+	delete_subcategories(category_id)	
+	return True
+
+def check_category_availability(category_params):
+	categories = get_categories({"name":category_params["name"]})	
+	if categories:
+		error_bad_request("Category already exists")
 
 def ensure_create_category_fields(category_params):
 	for category_param in CREATE_CATEGORY_FIELDS:
@@ -58,3 +69,6 @@ def update_category(category_id,category_updates):
 
 def delete_category(category_id):
 	return mongo_burrito.delete({"_id":to_bson(category_id)},"categories") 
+
+def delete_subcategories(category_id):
+	return mongo_burrito.delete({"parent_category":to_bson(category_id)},"subcategories") 

@@ -50,13 +50,13 @@ def user_actions(user_id):
 		user = [ clean_dict(user) for user in get_users({"_id":to_bson(user_id)}) ]
 		return to_json(user)
 
-	# UPDATE
+	# UPDATE  # TODO add better response
 	if request.method == 'POST':
 		validate_bson(user_id)
 		user_id = edit_user(user_id,request.values)
 		return to_json(str(True))
 
-	# DELETE
+	# DELETE # TODO add better response
 	if request.method == 'DELETE':
 		validate_bson(user_id)
 		delete_user(user_id)
@@ -108,16 +108,16 @@ def category_actions(category_id):
 		category = [ clean_dict(category) for category in get_categories({"_id":to_bson(category_id)}) ]
 		return to_json(category)
 
-	# UPDATE
+	# UPDATE  TODO add better response 
 	if request.method == 'POST':
 		validate_bson(category_id)
 		category_id = edit_category(category_id,request.values)
 		return to_json(str(True))
 
-	# DELETE
+	# DELETE  TODO add better response
 	if request.method == 'DELETE':
 		validate_bson(category_id)
-		delete_category(category_id)
+		delete_category_tree(category_id)
 		return to_json(str(True))
 
 # GET categories

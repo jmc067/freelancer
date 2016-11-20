@@ -163,9 +163,9 @@ def subcategory_actions(subcategory_id):
 
 # GET categories
 @app.route('/subcategory/search', methods = ['GET'])
-def list_categories():
-	categories = [ clean_dict(subcategory) for subcategory in search_subcategories(request.values) ]
-	return to_json(categories)
+def list_subcategories():
+	subcategories = [ clean_dict(subcategory) for subcategory in search_subcategories(request.values) ]
+	return to_json(subcategories)
 
 
 # SERVER START UP

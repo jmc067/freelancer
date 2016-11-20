@@ -29,6 +29,13 @@ Backend Application to offer account management, authentication, location tracki
 - `DELETE /category/:category_id`  <- Deletes category by id
 - `GET /category/search`    <- Gets list of categories by query
 
+### Subcategory Management Routes
+- `POST /subcategory/new`  <- Creates a new subcategory (or sub-subcategory)
+- `POST /subcategory/:subcategory_id`    <- Updates subcategory by id
+- `GET /subcategory/:subcategory_id`     <- Gets the subcategory by id
+- `DELETE /subcategory/:subcategory_id`  <- Deletes subcategory by id
+- `GET /subcategory/search`    <- Gets list of categories by query
+
 ### Authentication Routes
 - `POST /login`    <- Returns scramble token upon valid authorize (email/password).  Stores active session in Redis
 - `POST /logout`   <- Removes active session in Redis

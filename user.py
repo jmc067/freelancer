@@ -5,7 +5,10 @@ from errors import *
 from inbox import *
 from ledger import *
 from dict_helpers import *
+from jsonify import *
 from bsonify import *
+from category import *
+from subcategory import *
 import scrambler
 # TODO refactor out auth/session into seperate file
 # TODO refactor to use Python Classes
@@ -14,14 +17,27 @@ import scrambler
 def create_user(user_params):
 	user = copy(user_params)
 	ensure_signup_fields(user)
-	check_email_availability(user_params["email"])
+	check_email_availability(user["email"])
 	validate_role(user)
+	validate_categories(user)
+	validate_subcategories(user)
 	setup_inbox(user) # TODO add error handling
 	setup_ledger(user)  # TODO add error handling
 	salt_password(user)
 	user = format_user(user)
 	user.update({"_id":str(insert_user(user))}) # TODO add error handling
 	return format_user_response(user)
+
+def edit_user(user_id, user_params):
+	user_updates = copy_editable_user_fields(user_params)
+	if "email" in user_updates:
+		check_email_availability(user_updates["email"])
+	if "categories" in user_updates:
+		validate_categories(user_updates)
+	if "subcategories" in user_updates:
+		validate_subcategories(user_updates)
+	user_updates = format_user(user_updates)
+	return update_user(user_id,user_updates) # TODO add error handling.  Have a been response than mongo output
 
 def search_users(params):
 	query = {}
@@ -49,10 +65,6 @@ def extend_session(params):
 def check_authorization(params):
 	ensure_scramble(params)
 	ensure_session(params["scramble"])	
-
-def edit_user(user_id, user_params):
-	user_updates = copy_editable_user_fields(user_params)
-	return update_user(user_id,user_updates) # TODO add error handling.  Have a been response than mongo output
 
 # User Validation
 def ensure_authentication_fields(params):
@@ -124,6 +136,20 @@ def copy_editable_user_fields(user_params):
 			editable_fields[field] = user_params[field]
 	return editable_fields
 
+def validate_categories(user):
+	if "categories" in user:
+		for category_id in [category.strip() for category in user["categories"].split(',')]:
+			validate_bson(category_id)
+			if not get_categories({"_id":to_bson(category_id)}):
+				error_bad_request("Category not found")
+
+def validate_subcategories(user):
+	if "subcategories" in user:
+		for subcategory_id in [subcategory.strip() for subcategory in user["subcategories"].split(',')]:
+			validate_bson(subcategory_id)
+			if not get_subcategories({"_id":to_bson(subcategory_id)}):
+				error_bad_request("Subcategory not found")
+
 # todo make sure they have proper permissions in order to validate
 def validate_role(user_params):
 	role = user_params["role"]
@@ -139,7 +165,11 @@ def format_user(user):
 	formatted_user = {}
 	for field in SUPPORTED_USER_FIELDS:
 		if field in user:
-			formatted_user[field] = user[field]
+			# convert categories && subcategories to arrays
+			if field=="categories" or field=="subcategories":
+				formatted_user[field] = [x.strip() for x in user[field].split(',')]
+			else:
+				formatted_user[field] = user[field]
 	return formatted_user
 
 # Mongo Funcitons

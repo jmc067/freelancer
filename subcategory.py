@@ -28,12 +28,6 @@ def search_subcategories(params):
 			query[param] = params[param]
 	return get_subcategories(query)	
 
-# TODO add error handling
-def delete_subcategory_tree(subcategory_id):
-	delete_subcategory(subcategory_id)	
-	delete_subsubcategories(subcategory_id)	
-	return True
-
 def check_parent_category_validity(parent_category_id):
 	validate_bson(parent_category_id)
 	categories = get_categories({"_id":to_bson(parent_category_id)})

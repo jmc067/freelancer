@@ -26,7 +26,7 @@ Backend Application to offer account management, authentication, location tracki
 - `POST /category/new`  <- Creates a new category (or sub-category)
 - `POST /category/:category_id`    <- Updates category by id
 - `GET /category/:category_id`     <- Gets the category by id
-- `DELETE /category/:category_id`  <- Deletes category by id
+- `DELETE /category/:category_id`  <- Deletes category by id and all subcategories associated with it
 - `GET /category/search`    <- Gets list of categories by query
 
 ### Subcategory Management Routes

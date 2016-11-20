@@ -3,6 +3,7 @@ from flask import request
 import os
 import mongo_burrito
 import redis_taco
+import tracker
 from user import *
 from category import *
 from subcategory import *
@@ -10,6 +11,7 @@ from errors import *
 from jsonify import *
 from bsonify import *
 from constants import *
+
 
 app = Flask(__name__)
 
@@ -128,7 +130,6 @@ def list_categories():
 	return to_json(categories)
 
 
-
 ####################################
 ### Subategory Routes
 ####################################
@@ -166,6 +167,23 @@ def subcategory_actions(subcategory_id):
 def list_subcategories():
 	subcategories = [ clean_dict(subcategory) for subcategory in search_subcategories(request.values) ]
 	return to_json(subcategories)
+
+
+####################################
+### Location Routes
+####################################
+
+# POST Track users location 
+@app.route('/location', methods = ['POST'])
+def location():
+	# Store by location
+	if request.method == 'POST':
+		tracker.track(request.values)
+		return True
+
+	# Query by location
+	if request.method == 'GET':
+		return True
 
 
 # SERVER START UP

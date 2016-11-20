@@ -50,7 +50,7 @@ def authorize(params):
 	ensure_authentication_fields(params)
 	user = ensure_user(params["email"])
 	validate_password(params["password"],user["salted_password"])
-	return activate_session(user["_id"])
+	return activate_session(user)
 
 def deactivate_session(params):
 	ensure_scramble(params)
@@ -105,9 +105,9 @@ def extend_expiration(scramble):
 	redis_taco.expire(scramble,SESSION_LENGTH)
 	return True
 
-def activate_session(user_id):
+def activate_session(user):
 	scramble = scrambler.scramble()
-	redis_taco.set(scramble,user_id)
+	redis_taco.set(scramble,user["role"])
 	redis_taco.expire(scramble,SESSION_LENGTH)
 	return scramble
 

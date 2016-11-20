@@ -34,6 +34,5 @@ def get(key):
 def delete(key):
 	return _redis.delete(str(key))
 
-
-
-
+def geoadd(key,lon,lat,radius,member,with_distance=True):
+	return _redis.geoadd(key,lon,lat,member,radius,"mi",with_distance)

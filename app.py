@@ -189,16 +189,15 @@ def location():
 ### Messager Routes
 ####################################
 
-@app.route('/send/<user_id>', methods = ['POST'])
-def deliver(user_id):
-	postman.deliver(user_id,request.values)
+@app.route('/postman/<recipient_user_id>', methods = ['POST'])
+def deliver(recipient_user_id):
+	postman.deliver(recipient_user_id,request.values)
 	return "True" # TODO better response
 
-# @app.route('/inbox', methods = ['GET'])
-# def get_mail():
-# 	inbox = get_inbox(request.values)
-# 	print "inbox: " + inbox
-# 	return to_json(inbox)
+@app.route('/postman', methods = ['GET'])
+def get_mail():
+	inbox = postman.get_inbox(request.values)
+	return "True" # TODO better response
 
 
 # SERVER START UP

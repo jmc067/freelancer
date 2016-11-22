@@ -8,6 +8,17 @@ def deliver(recipient_user_id,params):
 	ensure_message(params)
 	record_message(recipient_user_id,params)		
 
+def get_inbox(params):
+	print params
+	# get user
+	users = get_users({"_id":to_bson(redis_taco.get(params["scramble"]))})
+	if users:
+		user = users[0]
+		return user["inbox"]
+	else:
+		error_bad_request("User not found")	
+
+
 def ensure_message(params):
 	if "message" not in params:
 		error_bad_request("No message specified")

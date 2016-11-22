@@ -1,4 +1,4 @@
-from redis import Redis
+import redis
 from constants import *
 
 _redis = None
@@ -9,7 +9,7 @@ def connect():
 	global _redis
 	if not _redis:
 		# Get Redis Client
-		_redis = Redis(
+		_redis = redis.StrictRedis(
 			host='redis', 
 			port=6379
 		)
@@ -34,5 +34,8 @@ def get(key):
 def delete(key):
 	return _redis.delete(str(key))
 
-def geoadd(key,lon,lat,radius,member,with_distance=True):
-	return _redis.geoadd(key,lon,lat,member,radius,"mi",with_distance)
+def geoadd(lon,lat,member):
+	return _redis.execute_command("geoadd","geo_tracker",lon,lat,member)
+
+def georadius(lon,lat,radius):
+	return _redis.execute_command("georadius","geo_tracker",lon,lat,radius,"mi","WITHDIST")

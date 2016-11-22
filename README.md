@@ -54,6 +54,11 @@ Backend Application to offer account management, authentication, location tracki
 - `POST /job`   <- Creates or Updates Job by id
 - `GET /jobs`   <- Gets jobs for query
 - `POST /job/:id/status` <- Updates job status by job id
+	- REQUEST
+	- ACCEPT
+	- START ? 
+	- STOP ? 
+	- COMPLETE	
 
 ### Payment - TBD
 

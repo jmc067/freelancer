@@ -13,13 +13,11 @@ from jsonify import *
 from bsonify import *
 from constants import *
 
-
 app = Flask(__name__)
 
 ####################################
 ### Establish Database Connections
 ####################################
-print "brand new 4"
 mongo_burrito.connect()
 redis_taco.connect()
 
@@ -176,18 +174,16 @@ def list_subcategories():
 ####################################
 
 # POST Track users location
-@app.route('/location', methods = ['POST'])
+@app.route('/location', methods = ['POST','GET'])
 def location():
 	# Store by location
 	if request.method == 'POST':
-		tracker.track(request.values)
-		return True
+		return to_json(tracker.track(request.values))
 
-	# Query by location
+	# Query by location.  Returns active WORKER users only
 	if request.method == 'GET':
-		return True
-
-
+		users = [ clean_dict(user) for user in tracker.search(request.values) ]
+		return to_json(users)
 
 ####################################
 ### Messager Routes
@@ -196,7 +192,7 @@ def location():
 @app.route('/send/<user_id>', methods = ['POST'])
 def deliver(user_id):
 	postman.deliver(user_id,request.values)
-	return "True"
+	return "True" # TODO better response
 
 # @app.route('/inbox', methods = ['GET'])
 # def get_mail():

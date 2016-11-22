@@ -107,7 +107,7 @@ def extend_expiration(scramble):
 
 def activate_session(user):
 	scramble = scrambler.scramble()
-	redis_taco.set(scramble,user["role"])
+	redis_taco.set(scramble,str(user["_id"]))
 	redis_taco.expire(scramble,SESSION_LENGTH)
 	return scramble
 

@@ -104,7 +104,6 @@ Backend Application to offer account management, authentication, location tracki
 ```
 {
 	"text":String,
-	"from":<BSON::ObjectID>,
 	"timestamp":Date
 }
 ```

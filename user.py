@@ -2,8 +2,6 @@ import mongo_burrito
 import redis_taco
 from constants import *
 from errors import *
-from inbox import *
-from ledger import *
 from dict_helpers import *
 from jsonify import *
 from bsonify import *
@@ -21,8 +19,8 @@ def create_user(user_params):
 	validate_role(user)
 	validate_categories(user)
 	validate_subcategories(user)
-	setup_inbox(user) # TODO add error handling
-	setup_ledger(user)  # TODO add error handling
+	user["inbox"] = {}
+	user["ledger"] = {}
 	salt_password(user)
 	user = format_user(user)
 	user.update({"_id":str(insert_user(user))}) # TODO add error handling
